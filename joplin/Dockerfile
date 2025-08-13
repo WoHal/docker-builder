@@ -1,0 +1,25 @@
+FROM node:22-alpine AS builder
+ARG TAG
+
+WORKDIR /app
+
+RUN apk update && apk add git rsync && \
+        git clone --depth 1 https://github.com/laurent22/joplin.git && \
+        cd joplin && git checkout $TAG
+
+RUN cd /app/joplin && yarn install && \
+        cd packages/app-mobile && yarn web
+
+FROM nginx:stable-alpine
+
+LABEL org.opencontainers.image.title='Joplin Web image'
+LABEL org.opencontainers.image.url='https://github.com/wohal/joplin-web-docker'
+LABEL org.opencontainers.image.source='https://github.com/wohal/joplin-web-docker'
+LABEL org.opencontainers.image.documentation='https://github.com/wohal/joplin-web-docker/README.md'
+LABEL org.opencontainers.image.licenses='MIT'
+
+COPY joplin-nginx.conf /etc/nginx/conf.d/joplin.conf
+
+COPY --from=builder /app/joplin/packages/app-mobile/web/dist/* /var/www/html/
+
+EXPOSE 8080
