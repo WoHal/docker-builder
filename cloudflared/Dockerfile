@@ -1,7 +1,9 @@
 FROM debian:stable
 
+ARG ver=2025.7.0
+
 RUN apt update && apt install wget cron -y && \
-	wget -q -O /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/download/2025.7.0/cloudflared-linux-amd64 && \
+	wget -q -O /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/download/${ver}/cloudflared-linux-amd64 && \
 	chmod +x /usr/local/bin/cloudflared
 
 COPY cloudflared-cron /etc/cron.d/cloudflared-cron
