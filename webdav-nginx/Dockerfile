@@ -1,7 +1,7 @@
 FROM nginx:stable-alpine
 
-ENV username
-ENV password
+ENV username=admin
+ENV password=password
 
 WORKDIR /data
 
