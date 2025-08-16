@@ -1,0 +1,12 @@
+services:
+  webdav:
+    image: wohal/webdav-nginx
+    container_name: webdav
+    environment:
+      - username=admin
+      - password=admin
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./data:/data
