@@ -1,8 +1,6 @@
 services:
   webdav:
-    # image: wohal/webdav-nginx
-    build:
-      context: .
+    image: wohal/webdav-nginx
     container_name: webdav
     environment:
       - username=admin
