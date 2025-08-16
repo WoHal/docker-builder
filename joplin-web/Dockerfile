@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN apk update && apk add git rsync && \
         git clone --depth 1 https://github.com/laurent22/joplin.git && \
-        cd joplin && git checkout ${tag} && \
+        cd joplin && git pull && git checkout ${tag} && \
         cd /app/joplin && yarn install && \
         cd packages/app-mobile && yarn web
 
