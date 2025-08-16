@@ -1,0 +1,1 @@
+Nginx webdav config from https://github.com/mcnewton/nginx_webdav

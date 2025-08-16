@@ -1,0 +1,18 @@
+server {
+	listen 8080;
+	server_name _;
+
+	include snippets/webdav_server.conf;
+	root /app/data;
+
+	location / {
+
+		auth_basic security;
+		auth_basic_user_file /app/conf/auth.passwd;
+
+		include snippets/webdav.conf;
+
+		fancyindex on;
+		fancyindex_exact_size off;
+	}
+}

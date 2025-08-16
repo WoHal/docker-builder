@@ -1,12 +1,14 @@
 services:
   webdav:
-    image: wohal/webdav-nginx
+    # image: wohal/webdav-nginx
+    build:
+      context: .
     container_name: webdav
     environment:
       - username=admin
       - password=password
     restart: always
     ports:
-      - 8080:8080
+      - 7778:8080
     volumes:
-      - ./data:/data
+      - ./data:/app/data

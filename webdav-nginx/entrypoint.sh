@@ -1,6 +1,12 @@
-#! /bin/sh
+#!/bin/sh
 
-u=$username
-p=$(openssl passwd $password)
+username=$1
+password=$(cryptpw -m md5 $2)
 
-echo $u:$p > /etc/nginx/auth.passwd
+mkdir -p /app/conf
+mkdir -p /app/data
+chown -R nginx /app/data
+
+echo $username:$password > /app/conf/auth.passwd
+
+nginx -g "daemon off;"

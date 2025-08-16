@@ -1,0 +1,7 @@
+*
+!conf.d
+!sites-enabled
+!snippets
+!nginx.conf
+!entrypoint.sh
+!webdav.conf
