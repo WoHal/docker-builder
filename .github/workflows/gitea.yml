@@ -14,12 +14,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          repository: 'go-gitea/gitea'
+          path: 'gitea/sources'
+          ref: '${{ inputs.tags }}'
         
-      - name: Get gitea code
-        run: |
-          cd gitea
-          git clone --single-branch -b ${{ inputs.tags }} https://github.com/go-gitea/gitea sources
-          cd sources
+      - run: |
+          cd gitea/sources
           git apply ../00-set-depth-in-migrate-options.patch
 
       - name: Docker meta
