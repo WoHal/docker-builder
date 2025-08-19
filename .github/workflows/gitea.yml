@@ -15,16 +15,23 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Gitea Code
         uses: actions/checkout@v5
         with:
           repository: 'go-gitea/gitea'
-          path: 'gitea/sources'
           ref: '${{ inputs.tags }}'
+
+      - name: Checkout Patch File
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            gitea/00-set-depth-in-migrate-options.patch
+          sparse-checkout-cone-mode: false
+
       - run: |
           ls
           ls gitea
-          cd gitea/sources
+          cd gitea
           ls
           git apply ../00-set-depth-in-migrate-options.patch
 
@@ -56,7 +63,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:gitea/sources"
+          context: "{{defaultContext}}:gitea"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
