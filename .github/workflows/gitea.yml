@@ -25,17 +25,14 @@ jobs:
       - name: Checkout Patch File
         uses: actions/checkout@v5
         with:
-          path: 'patches'
           sparse-checkout: |
-            gitea/00-set-depth-in-migrate-options.patch
-          sparse-checkout-cone-mode: false
+            gitea-patches
 
       - run: |
           ls
-          ls gitea
+          ls gitea-patches
           cd gitea
-          ls
-          git apply ../patches/00-set-depth-in-migrate-options.patch
+          git apply ../gitea-patches/00-set-depth-in-migrate-options.patch
 
       - name: Docker meta
         id: meta
