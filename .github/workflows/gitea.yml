@@ -23,7 +23,9 @@ jobs:
           ref: '${{ inputs.tags }}'
       - run: |
           ls
+          ls gitea
           cd gitea/sources
+          ls
           git apply ../00-set-depth-in-migrate-options.patch
 
       - name: Docker meta
