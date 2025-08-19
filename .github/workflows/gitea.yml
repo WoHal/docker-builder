@@ -8,6 +8,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -18,8 +21,8 @@ jobs:
           repository: 'go-gitea/gitea'
           path: 'gitea/sources'
           ref: '${{ inputs.tags }}'
-        
       - run: |
+          ls
           cd gitea/sources
           git apply ../00-set-depth-in-migrate-options.patch
 
