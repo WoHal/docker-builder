@@ -1,0 +1,108 @@
+diff --git a/modules/migration/options.go b/modules/migration/options.go
+index 163aa0cfaa..a485edf1c8 100644
+--- a/modules/migration/options.go
++++ b/modules/migration/options.go
+@@ -12,6 +12,7 @@ type MigrateOptions struct {
+ 	// required: true
+ 	CloneAddr             string `json:"clone_addr" binding:"Required"`
+ 	CloneAddrEncrypted    string `json:"clone_addr_encrypted,omitempty"`
++	Depth                 int    `json:"depth"`
+ 	AuthUsername          string `json:"auth_username"`
+ 	AuthPassword          string `json:"-"`
+ 	AuthPasswordEncrypted string `json:"auth_password_encrypted,omitempty"`
+diff --git a/modules/structs/repo.go b/modules/structs/repo.go
+index 5da2ad09bd..c631775860 100644
+--- a/modules/structs/repo.go
++++ b/modules/structs/repo.go
+@@ -363,6 +363,7 @@ type MigrateRepoOptions struct {
+ 	AuthPassword string `json:"auth_password"`
+ 	AuthToken    string `json:"auth_token"`
+ 
++	Depth          int    `json:"depth"`
+ 	Mirror         bool   `json:"mirror"`
+ 	LFS            bool   `json:"lfs"`
+ 	LFSEndpoint    string `json:"lfs_endpoint"`
+diff --git a/options/locale/locale_en-US.ini b/options/locale/locale_en-US.ini
+index c026c818c5..a2df0739f5 100644
+--- a/options/locale/locale_en-US.ini
++++ b/options/locale/locale_en-US.ini
+@@ -1174,6 +1174,7 @@ form.name_pattern_not_allowed = The pattern "%s" is not allowed in a repository
+ need_auth = Authorization
+ migrate_options = Migration Options
+ migrate_service = Migration Service
++migrate_options_depth = Migration / Clone Depth
+ migrate_options_mirror_helper = This repository will be a mirror
+ migrate_options_lfs = Migrate LFS files
+ migrate_options_lfs_endpoint.label = LFS Endpoint
+diff --git a/routers/api/v1/repo/migrate.go b/routers/api/v1/repo/migrate.go
+index f2e0cad86c..8f53ea07b8 100644
+--- a/routers/api/v1/repo/migrate.go
++++ b/routers/api/v1/repo/migrate.go
+@@ -141,6 +141,7 @@ func Migrate(ctx *context.APIContext) {
+ 
+ 	opts := migrations.MigrateOptions{
+ 		CloneAddr:      remoteAddr,
++		Depth:          form.Depth,
+ 		RepoName:       form.RepoName,
+ 		Description:    form.Description,
+ 		Private:        form.Private || setting.Repository.ForcePrivate,
+diff --git a/routers/web/repo/migrate.go b/routers/web/repo/migrate.go
+index ea15e90e5c..1cb30b5fe2 100644
+--- a/routers/web/repo/migrate.go
++++ b/routers/web/repo/migrate.go
+@@ -207,6 +207,7 @@ func MigratePost(ctx *context.Context) {
+ 		OriginalURL:    form.CloneAddr,
+ 		GitServiceType: form.Service,
+ 		CloneAddr:      remoteAddr,
++		Depth:          form.Depth,
+ 		RepoName:       form.RepoName,
+ 		Description:    form.Description,
+ 		Private:        form.Private || setting.Repository.ForcePrivate,
+diff --git a/services/forms/repo_form.go b/services/forms/repo_form.go
+index a2827e516a..e63b4ab068 100644
+--- a/services/forms/repo_form.go
++++ b/services/forms/repo_form.go
+@@ -56,6 +56,7 @@ func (f *CreateRepoForm) Validate(req *http.Request, errs binding.Errors) bindin
+ type MigrateRepoForm struct {
+ 	// required: true
+ 	CloneAddr    string                 `json:"clone_addr" binding:"Required"`
++	Depth        int                    `json:"depth"`
+ 	Service      structs.GitServiceType `json:"service"`
+ 	AuthUsername string                 `json:"auth_username"`
+ 	AuthPassword string                 `json:"auth_password"`
+diff --git a/services/migrations/gitea_uploader.go b/services/migrations/gitea_uploader.go
+index 737bff24d0..1cf7670100 100644
+--- a/services/migrations/gitea_uploader.go
++++ b/services/migrations/gitea_uploader.go
+@@ -126,6 +126,7 @@ func (g *GiteaLocalUploader) CreateRepo(ctx context.Context, repo *base.Reposito
+ 		LFS:            opts.LFS,
+ 		LFSEndpoint:    opts.LFSEndpoint,
+ 		CloneAddr:      repo.CloneURL, // SECURITY: we will assume that this has already been checked
++		Depth:          opts.Depth,
+ 		Private:        repo.IsPrivate,
+ 		Wiki:           opts.Wiki,
+ 		Releases:       opts.Releases, // if didn't get releases, then sync them from tags
+diff --git a/services/repository/migrate.go b/services/repository/migrate.go
+index 0859158b89..ae283cf2c4 100644
+--- a/services/repository/migrate.go
++++ b/services/repository/migrate.go
+@@ -93,6 +93,7 @@ func MigrateRepositoryGitData(ctx context.Context, u *user_model.User,
+ 	if err := git.Clone(ctx, opts.CloneAddr, repoPath, git.CloneRepoOptions{
+ 		Mirror:        true,
+ 		Quiet:         true,
++		Depth:         opts.Depth,
+ 		Timeout:       migrateTimeout,
+ 		SkipTLSVerify: setting.Migrations.SkipTLSVerify,
+ 	}); err != nil {
+diff --git a/templates/repo/migrate/options.tmpl b/templates/repo/migrate/options.tmpl
+index 8a46e5769b..a9c168e439 100644
+--- a/templates/repo/migrate/options.tmpl
++++ b/templates/repo/migrate/options.tmpl
+@@ -1,3 +1,7 @@
++<div class="inline field">
++	<label>{{ctx.Locale.Tr "repo.migrate_options_depth"}}</label>
++	<input id="depth" name="depth" type="number" placeholder="Default is 0. All commits">
++</div>
+ {{if not .DisableNewPullMirrors}}
+ <div class="inline field">
+ 	<label>{{ctx.Locale.Tr "repo.migrate_options"}}</label>
