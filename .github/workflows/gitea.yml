@@ -30,8 +30,6 @@ jobs:
             gitea
 
       - run: |
-          ls
-          ls gitea-patches
           cd gitea
           git apply ../patches/gitea/00-set-depth-in-migrate-options.patch
 
