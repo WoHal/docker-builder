@@ -1,26 +1,26 @@
 FROM node:current-alpine3.22 AS web-builder
-WORKDIR /app
-ARG TAG=1.19.12
+WORKDIR /builder
+ARG TAG=v1.19.12
 RUN npm i -g pnpm && \
-    apk update && apk add git && \
-    git clone https://github.com/haishanh/yacd.git && \
-    cd yacd && \
-    pnpm i && pnpm build && \
-    wget -q https://github.com/MetaCubeX/mihomo/releases/download/${TAG}/mihomo-linux-amd64-${TAG}.gz && \
+    wget -O yacd.zip -q https://github.com/haishanh/yacd/archive/refs/heads/master.zip && \
+    unzip yacd.zip && \
+    cd yacd-master && pnpm i && pnpm build && \
+    cd /builder && wget -q https://github.com/MetaCubeX/mihomo/releases/download/${TAG}/mihomo-linux-amd64-${TAG}.gz && \
     gzip -d mihomo-linux-amd64-${TAG}.gz && \
-    mv mihomo-linux-amd64-${TAG} clash
+    mv mihomo-linux-amd64-${TAG} clash && chmod +x clash
 
 FROM alpine:3.22
 WORKDIR /app
-COPY --from=web-builder /app/yacd/public ui
-COPY --from=web-builder /app/clash /bin/clash
-COPY startup.sh /bin
-RUN apk update && apk add cron && \
-    makedir -p /app/config
 
-EXPOSE 7899
+RUN mkdir -p /app/config
 
-VOLUME [ "/app" ]
+COPY startup.sh /etc/periodic/weekly/startup.sh
+COPY --from=web-builder /builder/yacd-master/public ui
+COPY --from=web-builder /builder/clash /bin/clash
 
-ENTRYPOINT [ "/bin/startup.sh" ]
-CMD ["cron"]
+ENV SKIP_SAFE_PATH_CHECK=true
+
+EXPOSE 7890
+EXPOSE 9090
+
+ENTRYPOINT [ "/etc/periodic/weekly/startup.sh" ]

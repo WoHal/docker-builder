@@ -27,4 +27,4 @@ sed -i '1s/^/external-ui: "\/app\/ui"\n/' $conf_file
 #echo '  - MATCH,🔰 节点选择' >> $conf_file
 
 pkill clash || true
-clash -d /app/conf
+clash -d /app/config -f $conf_file
