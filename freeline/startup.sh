@@ -15,7 +15,7 @@ fi
 # change some conf
 sed -ie 's/127.0.0.1:9090/0.0.0.0:9090/' $conf_file
 sed -ie 's/allow-lan: *false/allow-lan: true/' $conf_file
-sed -ie 's/cipher: ss/cipher: auto/g' $conf_file
+sed -ie 's/cipher: ss/cipher: aes-256-cfb/g' $conf_file
 
 sed -i '1s/^/bind-address: "*"\n/' $conf_file
 sed -i '1s/^/external-ui: "\/app\/ui"\n/' $conf_file

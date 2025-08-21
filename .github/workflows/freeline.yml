@@ -1,4 +1,4 @@
-name: clashfree
+name: freeline
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            wohal/clashfree
+            wohal/freeline
           # generate Docker tags based on the following events/attributes
           tags: |
             ${{ inputs.tags }}
@@ -39,7 +39,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:clashfree"
+          context: "{{defaultContext}}:freeline"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
