@@ -5,20 +5,8 @@ server {
 	include snippets/webdav_server.conf;
 	root /app/data;
 
-	# 增加URL和请求头的缓冲区大小
-	large_client_header_buffers 4 16k;
-	client_header_buffer_size 4k;
-
-	# 设置正确的编码
-	charset utf-8;
-
-	# 处理404错误
-	error_page 404 /404.html;
-	location = /404.html {
-		internal;
-	}
-
 	location / {
+
 		auth_basic security;
 		auth_basic_user_file /app/conf/auth.passwd;
 
@@ -26,13 +14,5 @@ server {
 
 		fancyindex on;
 		fancyindex_exact_size off;
-
-		# 处理特殊字符URL
-		try_files $uri $uri/ =404;
-
-		# 允许特殊字符和长URL
-		proxy_buffer_size 128k;
-		proxy_buffers 4 256k;
-		proxy_busy_buffers_size 256k;
 	}
 }
