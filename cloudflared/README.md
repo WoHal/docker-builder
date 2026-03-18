@@ -16,4 +16,6 @@ services:
       - TUNNEL_PIDFILE=/run/cf.pid
       - TUNNEL_URL=https://example.com
       - TUNNEL_TOKEN=xxxxxxxxxxx
+      - HEALTH_API=https://check.example.com
+      - HEALTH_RESPONSE=ok
 ```

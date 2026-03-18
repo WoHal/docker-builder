@@ -1,8 +1,7 @@
 #!/bin/bash
 
-res=$(wget -O- -q 127.0.0.1:20241/ready)
-st=$(echo res | grep -Po '"status":\d+' | grep -Po '\d+')
+res=$(wget -O- -q $HEALTH_API)
 
-if [ "$st" != "200" ] && [ "" != "$TUNNEL_PIDFILE" ]; then
+if [ "$res" != "$HEALTH_RESPONSE" ] && [ "" != "$TUNNEL_PIDFILE" ]; then
 	kill -9 $(cat $TUNNEL_PIDFILE)
 fi
