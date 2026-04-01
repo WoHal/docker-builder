@@ -45,9 +45,8 @@ jobs:
           # 1.2
           # 1.2.3
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}
-            type=semver,pattern={{major}}.{{minor}}
+            ${{ inputs.tags }}
+            latest
           annotations: |
             org.opencontainers.image.authors="maintainers@gitea.io"
 
