@@ -28,6 +28,7 @@ jobs:
 
       - name: Build for smartDNS
         run: |
+          cd dnsmasq-china-list
           make SERVER=domestic SMARTDNS_SPEEDTEST_MODE=none smartdns-domain-rules
 
       - name: Commit and Push changes
