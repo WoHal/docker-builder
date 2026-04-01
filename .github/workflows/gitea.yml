@@ -71,4 +71,4 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/riscv64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          annotations: ${{ steps.meta_rootless.outputs.annotations }}
+          annotations: ${{ steps.meta.outputs.annotations }}
