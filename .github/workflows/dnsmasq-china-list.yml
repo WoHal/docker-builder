@@ -23,10 +23,11 @@ jobs:
       - name: Clone Current Repository
         uses: actions/checkout@v6
       
-      - name: Checkout dnsmasq-china-list Code
-        run: |
-          git clone --depth 1 --branch main https://github.com/felixonmars/dnsmasq-china-list.git dnsconf
-
+      - name: Clone dnsmasq-china-list Repository
+        uses: actions/checkout@v6
+        with:
+          repository: felixonmars/dnsmasq-china-list
+          path: dnsconf
       - name: Build for smartDNS
         run: |
           cd dnsconf
