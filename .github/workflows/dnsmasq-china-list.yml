@@ -1,0 +1,41 @@
+name: dnsmasq-china-list
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # every day at midnight
+
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Input dnsmasq-china-list tag'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Checkout dnsmasq-china-list Code
+        uses: actions/checkout@v6
+        with:
+          repository: 'felixonmars/dnsmasq-china-list'
+          path: 'dnsmasq-china-list'
+          persist-credentials: true # to access private repos if needed
+
+      - name: Build for smartDNS
+        run: |
+          make SERVER=domestic SMARTDNS_SPEEDTEST_MODE=none smartdns-domain-rules
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update dnsmasq-china-list
+          branch: main
+          file_pattern: |
+            accelerated-domains.china.domain.smartdns.conf
+            google.china.domain.smartdns.conf
+            apple.china.domain.smartdns.conf
