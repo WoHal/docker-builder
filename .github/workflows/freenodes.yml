@@ -1,0 +1,39 @@
+name: freenodes
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # every day at midnight
+
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Input tag'
+        required: false
+        type: string
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Clone Current Repository
+        uses: actions/checkout@v6
+
+      - name: Generate freenodes list
+        run: |
+          cd freenodes
+          pip3 install -r requirements.txt
+          python3 generate_freenodes.py
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update freenodes list
+          commit_user_name: github-actions
+          commit_user_email: github-actions@users.noreply.github.com
+          branch: main
+          file_pattern: 'freenodes/*'
