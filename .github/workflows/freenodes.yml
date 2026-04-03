@@ -27,7 +27,7 @@ jobs:
         run: |
           cd freenodes
           pip3 install -r requirements.txt
-          python3 generate_freenodes.py
+          python3 generate_config.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
