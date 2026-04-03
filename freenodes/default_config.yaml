@@ -34,7 +34,7 @@ dns:
   - 119.29.29.29
   - 180.76.76.76
 proxies:
-proxy_groups:
+proxy-groups:
 rule-providers:
   Apple:
     behavior: classical
