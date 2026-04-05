@@ -1,6 +1,6 @@
 urls:
   # - https://raw.githubusercontent.com/ripaojiedian/freenode/refs/heads/main/clash
-  # - https://free.datiya.com/uploads/20260403-clash.yaml
+  - https://free.datiya.com/uploads/{YYYYmmdd}-clash.yaml
   # - https://raw.githubusercontent.com/Barabama/FreeNodes/refs/heads/main/nodes/blues.yaml
   # - https://raw.githubusercontent.com/Barabama/FreeNodes/refs/heads/main/nodes/clashmeta.yaml
   # - https://raw.githubusercontent.com/Barabama/FreeNodes/refs/heads/main/nodes/ndnode.yaml

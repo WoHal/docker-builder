@@ -104,13 +104,13 @@ rules:
   - RULE-SET,SteamCN,DIRECT
   - RULE-SET,BanProgramAD,REJECT
   - RULE-SET,BanAD,REJECT
-  - RULE-SET,Microsoft,Auto
-  - RULE-SET,Apple,Auto
-  - RULE-SET,ProxyMedia,Auto
-  - RULE-SET,Telegram,Auto
-  - RULE-SET,ProxyLite,Auto
+  - RULE-SET,Microsoft,Custom
+  - RULE-SET,Apple,Custom
+  - RULE-SET,ProxyMedia,Custom
+  - RULE-SET,Telegram,Custom
+  - RULE-SET,ProxyLite,Custom
   - GEOIP,CN,DIRECT
-  - MATCH,Auto
+  - MATCH,Custom
 tun:
   auto-detect-interface: true
   auto-route: true

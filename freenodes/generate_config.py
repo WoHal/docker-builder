@@ -10,11 +10,27 @@ def read_yaml(file_path):
         data = yaml.safe_load(f)
     return data['urls']
 
+def generate_real_url(url):
+    switch = {
+        '{YYYYmmdd}': os.popen('date +%Y%m%d').read().strip(),
+    }
+
+    for placeholder, replacement in switch.items():
+        url = url.replace(placeholder, replacement)
+
+    return url
+
 def load_content_from_url(url):
-    response = requests.get(url)
-    response.raise_for_status()
-    res = yaml.safe_load(response.text)
-    return res['proxies']
+    url = generate_real_url(url)
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        res = yaml.safe_load(response.text)
+        return res['proxies']
+
+    except Exception as e:
+        print(f"Error loading content from {url}: {e}")
+        return []
 
 def load_all_proxies(urls):
     all_proxies = []
@@ -33,6 +49,11 @@ def generate_proxies_config(proxies):
                 'proxies': [proxy['name'] for proxy in proxies],
                 'url': 'http://www.gstatic.com/generate_204',
                 'interval': 300
+            },
+            {
+                'name': 'Custom',
+                'type': 'select',
+                'proxies': ['Auto', 'DIRECT'] + [proxy['name'] for proxy in proxies]
             }
         ]
     }

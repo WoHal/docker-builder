@@ -2,7 +2,7 @@ name: freenodes
 
 on:
   schedule:
-    - cron: '0 1 * * *' # every day at midnight
+    - cron: '0 11,23 * * *' # every day at midnight
 
   workflow_dispatch:
     inputs:
