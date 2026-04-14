@@ -1,0 +1,20 @@
+services:
+    warp:
+        image: wohal/warp:latest
+        container_name: warp
+        restart: always
+        env_file: .env
+        tty: true
+        stdin_open: true
+        ports:
+            - 1080:1080
+
+        network_mode: host
+
+        privileged: true
+        cap_add:
+            - NET_ADMIN
+            - SYS_MODULE
+
+        volumes:
+            - ./warp:/var/lib/cloudflare-warp
