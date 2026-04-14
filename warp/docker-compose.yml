@@ -6,8 +6,6 @@ services:
         env_file: .env
         tty: true
         stdin_open: true
-        ports:
-            - 1080:1080
 
         network_mode: host
 

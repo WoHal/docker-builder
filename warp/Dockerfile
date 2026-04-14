@@ -20,4 +20,4 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 VOLUME ["/var/lib/cloudflare-warp"]
-CMD ["tini", "-", "sh", "/scripts/startup.sh"]
+CMD ["/usr/bin/tini", "--", "sh", "/scripts/startup.sh"]
